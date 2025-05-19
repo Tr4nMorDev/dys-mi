@@ -1,19 +1,18 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const morgan = require("morgan");
-
-dotenv.config();
+const cors = require("cors");
+const corsOptions = require("./config/corsConfig");
+const routes = require("./routes/index.routes.js");
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.static("public"));
+app.use(cors(corsOptions));
 
-// Example route
-app.get("/", (req, res) => {
-  res.send("Welcome to Caro Game API!");
-});
+// Routes
+app.use("/", routes);
 
-// Export app
 module.exports = app;

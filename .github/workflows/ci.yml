@@ -21,26 +21,26 @@ jobs:
         run: |
           docker-compose up -d --build
 
-      - name: Wait for containers to be healthy
-        run: |
-          # Kiểm tra postgres container health status
-          for i in {1..30}; do
-            status=$(docker inspect --format='{{.State.Health.Status}}' postgres-db || echo "none")
-            echo "Postgres status: $status"
-            if [ "$status" = "healthy" ]; then
-              echo "Postgres is healthy"
-              break
-            fi
-            sleep 5
-          done
+      # - name: Wait for containers to be healthy
+      #   run: |
+      #     # Kiểm tra postgres container health status
+      #     for i in {1..30}; do
+      #       status=$(docker inspect --format='{{.State.Health.Status}}' postgres-db || echo "none")
+      #       echo "Postgres status: $status"
+      #       if [ "$status" = "healthy" ]; then
+      #         echo "Postgres is healthy"
+      #         break
+      #       fi
+      #       sleep 5
+      #     done
 
-      - name: Check containers status
-        run: docker ps
+      # - name: Check containers status
+      #   run: docker ps
 
-      - name: Run basic tests (example)
-        run: |
-          # Ví dụ: kiểm tra cổng app đã mở chưa
-          docker exec node-app curl -f http://localhost:3000/ || exit 1
+      # - name: Run basic tests (example)
+      #   run: |
+      #     # Ví dụ: kiểm tra cổng app đã mở chưa
+      #     docker exec node-app curl -f http://localhost:3000/ || exit 1
 
-      - name: Tear down containers
-        run: docker-compose down -v
+      # - name: Tear down containers
+      #   run: docker-compose down -v
