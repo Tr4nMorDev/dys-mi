@@ -1,0 +1,29 @@
+# Bỏ qua node_modules - nơi chứa toàn bộ package đã cài
+node_modules/
+
+# Bỏ qua file env chứa biến môi trường như DB_PASSWORD
+.env
+
+# Log files
+logs/
+*.log
+
+# Hệ điều hành tự sinh
+.DS_Store
+Thumbs.db
+
+# IDE và editor
+.vscode/
+.idea/
+
+# Bỏ thư mục build (nếu có)
+dist/
+build/
+
+# npm debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage khi test
+coverage/
