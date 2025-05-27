@@ -18,5 +18,6 @@ router.post(
   authController.googleLogin
 );
 router.post("/api/login", authController.login);
-
+// router.post("/api/logout", authController.logout);
+// router.post("api/matchmaking/start");
 module.exports = router;

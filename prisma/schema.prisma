@@ -8,12 +8,58 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   name     String
-  email    String  @unique
+  email    String   @unique
   password String?
-  avatar   String?  @default("1.png") // URL ảnh đại diện từ Google (hoặc null nếu không có)
-  google   Boolean  @default(false) // true nếu user đăng nhập bằng Google
+  avatar   String?  @default("1.png")
+  google   Boolean  @default(false)
+
+  // Quan hệ với Match
+  matches1 Match[] @relation("Player1") // là người tạo hoặc người đầu tiên
+  matches2 Match[] @relation("Player2") // là người được ghép
+
+  // Quan hệ với Game (X hoặc O)
+  gamesAsX Game[] @relation("XPlayer")
+  gamesAsO Game[] @relation("OPlayer")
 }
 
-//npx prisma migrate dev --name add_avatar_and_google 
+enum MatchStatus {
+  waiting 
+  matched
+}
+
+model Match {
+  id         Int      @id @default(autoincrement())
+  player1Id  Int
+  player2Id  Int
+  matchedAt  DateTime @default(now())
+  status     MatchStatus @default(waiting) // waiting | matched
+
+  player1    User @relation("Player1", fields: [player1Id], references: [id])
+  player2    User @relation("Player2", fields: [player2Id], references: [id])
+
+  game       Game?
+}
+
+enum GameStatus {
+  ongoing 
+  finished
+  draw
+}
+
+model Game {
+  id         Int      @id @default(autoincrement())
+  matchId    Int      @unique
+  xPlayerId  Int
+  oPlayerId  Int
+  boardState Json     @default("{}") // có thể lưu array nước đi
+  turn       String   @default("X")  // X | O
+  status     GameStatus @default(ongoing) // ongoing | finished | draw
+  createdAt  DateTime @default(now())
+
+  match      Match    @relation(fields: [matchId], references: [id])
+  xPlayer    User     @relation("XPlayer", fields: [xPlayerId], references: [id])
+  oPlayer    User     @relation("OPlayer", fields: [oPlayerId], references: [id])
+}
+//npx prisma migrate dev --name reset-db-add-game

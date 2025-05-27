@@ -1,9 +1,10 @@
-const jwt = require("jsonwebtoken");
 const userService = require("../services/user.service");
+const authService = require("../services/auth.service");
+const jwt = require("jsonwebtoken");
 
 exports.googleLogin = async (req, res) => {
   const { email, name, picture } = req.googleUser;
-
+  console.log("Google User:", req.googleUser);
   try {
     let user = await userService.findOrCreateGoogleUser({
       email,
@@ -18,7 +19,8 @@ exports.googleLogin = async (req, res) => {
         expiresIn: "1d",
       }
     );
-
+    console.log("token:", token);
+    console.log("user:", user);
     res.status(200).json({ user, token });
   } catch (err) {
     console.error("Google login error:", err.message);
@@ -28,23 +30,19 @@ exports.googleLogin = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Email không tồn tại" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Sai mật khẩu" });
-
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    res.json({
-      token,
-      user: { id: user._id, email: user.email },
-    });
+    const { user, token } = await authService.login(email, password);
+    res.json({ user, token });
   } catch (err) {
-    res.status(500).json({ message: "Lỗi server" });
+    res.status(err.status || 500).json({ message: err.message });
+  }
+};
+exports.logout = async (req, res) => {
+  console.log("req:", req);
+  try {
+    const user = await authService.logout(req.user.id);
+    res.json({ user });
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message });
   }
 };

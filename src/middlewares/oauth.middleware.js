@@ -3,11 +3,11 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 async function verifyGoogleToken(req, res, next) {
   const { idToken } = req.body;
-  console.log(idToken);
+
   if (!idToken) {
     return res.status(400).json({ message: "Thiếu token từ Google" });
   }
-  console.log(" env : ", process.env.GOOGLE_CLIENT_ID);
+
   try {
     const ticket = await client.verifyIdToken({
       idToken,
