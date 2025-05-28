@@ -52,11 +52,11 @@ npx tsc
 node dist/server.js
 ```
 
-### API Endpoints chính
+### 4. API Endpoints chính
 
-| Phương thức | URL            | Mô tả                        |
-| ----------- | -------------- | ---------------------------- | --- |
-| POST        | `/auth/login`  | Đăng nhập bằng JWT           |
-| POST        | `/auth/google` | Đăng nhập bằng Google OAuth2 |
-| POST        | `/auth/logout` | Đăng xuất                    |
-| GET         | `/auth/signup` | Đăng kí                      |     |
+| Phương thức | URL          | Mô tả                        |
+| ----------- | ------------ | ---------------------------- |
+| POST        | /auth/login  | Đăng nhập bằng JWT           |
+| POST        | /auth/google | Đăng nhập bằng Google OAuth2 |
+| POST        | /auth/logout | Đăng xuất                    |
+| GET         | /auth/signup | Đăng kí                      |
