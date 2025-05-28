@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - Stogare-jwt-and-google-sigin-signout
+      - add-redis-matching
   pull_request:
     branches: [master]
 
