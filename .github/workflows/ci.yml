@@ -2,8 +2,7 @@ name: CI - Test Docker Compose
 
 on:
   push:
-    branches:
-      - main
+    branches: [master]
   pull_request:
 
 jobs:
@@ -17,30 +16,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and start containers
+      - name: Set up Docker Compose
+        run: sudo apt-get update && sudo apt-get install docker-compose -y
+
+      - name: Run Docker Compose
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          PORT: ${{ secrets.PORT }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: docker-compose up -d --build
+
+      - name: Wait for app to be healthy
         run: |
-          docker-compose up -d --build
+          sleep 10
+          docker logs node-app
 
-      # - name: Wait for containers to be healthy
-      #   run: |
-      #     # Kiểm tra postgres container health status
-      #     for i in {1..30}; do
-      #       status=$(docker inspect --format='{{.State.Health.Status}}' postgres-db || echo "none")
-      #       echo "Postgres status: $status"
-      #       if [ "$status" = "healthy" ]; then
-      #         echo "Postgres is healthy"
-      #         break
-      #       fi
-      #       sleep 5
-      #     done
-
-      # - name: Check containers status
-      #   run: docker ps
-
-      # - name: Run basic tests (example)
-      #   run: |
-      #     # Ví dụ: kiểm tra cổng app đã mở chưa
-      #     docker exec node-app curl -f http://localhost:3000/ || exit 1
-
-      # - name: Tear down containers
-      #   run: docker-compose down -v
+      - name: Check app is running
+        run: |
+          curl --fail http://localhost:3000 || exit 1

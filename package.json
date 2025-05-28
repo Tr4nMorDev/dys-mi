@@ -1,18 +1,22 @@
 {
   "name": "backend-caro-game",
   "version": "1.0.0",
-  "description": "This my first project game",
-  "main": "src/server.js",
+  "description": "This is my first project game",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tr4nMorDev/dys-mi.git"
+    "url": "https://github.com/Tr4nMorDev/dys-mi.git"
   },
   "keywords": [
     "nodejs",
+    "typescript",
     "game",
     "caro"
   ],
@@ -27,7 +31,7 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
     "google-auth-library": "^9.15.1",
     "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
@@ -35,6 +39,15 @@
     "pg": "^8.16.0"
   },
   "devDependencies": {
-    "prisma": "^6.8.2"
+    "@types/cors": "^2.8.18",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.11.30",
+    "@types/pg": "^8.15.2",
+    "prisma": "^6.8.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
   }
 }

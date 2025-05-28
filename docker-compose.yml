@@ -8,7 +8,7 @@ services:
       - "5437:5432"
     environment:
       POSTGRES_USER: myuser
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: your_password
       POSTGRES_DB: mydatabase
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -18,22 +18,25 @@ services:
       timeout: 5s
       retries: 5
 
-  # app:
-  #   container_name: node-app
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - .:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   command: node src/server.js
+  app:
+    container_name: node-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL}
+      - PORT=${PORT}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: node dist/server.js # Chạy file build JS từ TypeScript
+    volumes:
+      - /app/node_modules # Giữ node_modules trong container để không bị ghi đè
+      # - .:/app                 # Mở dòng này khi phát triển, mount toàn bộ code vào container
 
 volumes:
   postgres-data:
