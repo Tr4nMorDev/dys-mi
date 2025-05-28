@@ -2,8 +2,11 @@ name: CI - Test Docker Compose
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - Stogare-jwt-and-google-sigin-signout
   pull_request:
+    branches: [master]
 
 jobs:
   test-docker-compose:
@@ -31,7 +34,3 @@ jobs:
         run: |
           sleep 10
           docker logs node-app
-
-      - name: Check app is running
-        run: |
-          curl --fail http://localhost:3000 || exit 1

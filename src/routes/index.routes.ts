@@ -14,19 +14,10 @@ router.get("/favicon.ico", (req: Request, res: Response) => {
   res.status(204).end();
 });
 
-router.post("/api/signup", registerUser);
-router.post(
-  "/auth/google-login",
-  verifyGoogleToken,
-  authController.googleLogin
-);
-router.post("/api/login", authController.login);
+router.post("/auth/signup", registerUser);
+router.post("/auth/google", verifyGoogleToken, authController.googleLogin);
+router.post("/auth/login", authController.login);
 
-router.post("/api/logout", verifyJwtToken, authController.logout);
-// router.put(
-//   "/api/matchmaking/start",
-//   verifyJwtToken,
-//   matchmaking.startMatchmaking
-// );
+router.post("/auth/logout", verifyJwtToken, authController.logout);
 
 export default router;
