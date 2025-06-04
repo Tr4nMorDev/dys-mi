@@ -3,6 +3,7 @@ import userService from "../services/user.service";
 import { AuthProvider } from "../enums/auth-provider.enum";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { registeredUsers } from "../metrics"; // import metric
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
@@ -47,6 +48,9 @@ export const registerUser = async (
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: "1d",
     });
+
+    // ✅ Tăng metric mỗi khi có user mới
+    registeredUsers.inc();
 
     res.status(201).json({
       token,

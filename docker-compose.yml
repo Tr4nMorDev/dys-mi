@@ -17,7 +17,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  # docker-compose.yml
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   # app:
   #   container_name: node-app
   #   build:
@@ -27,16 +31,40 @@ services:
   #     - "3000:3000"
   #   environment:
   #     - POSTGRES_URL=${POSTGRES_URL}
+  #     - REDIS_URL=${REDIS_URL} # 👉 THÊM DÒNG NÀY
   #     - PORT=${PORT}
   #     - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
   #     - JWT_SECRET=${JWT_SECRET}
   #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   command: node dist/server.js # Chạy file build JS từ TypeScript
+  #     - postgres
+  #     - redis
+  #   # command: node dist/server.js # Chạy file build JS từ TypeScript
   #   volumes:
   #     - /app/node_modules # Giữ node_modules trong container để không bị ghi đè
-  #     # - .:/app                 # Mở dòng này khi phát triển, mount toàn bộ code vào container
+  # - .:/app # Mở dòng này khi phát triển, mount toàn bộ code vào container
+
+  #Prometheus
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   depends_on:
+  #     - app
+
+  # Grafana
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:
+  #     - "3001:3000"
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   depends_on:
+  #     - prometheus
 
 volumes:
   postgres-data:
+  # grafana-data:
