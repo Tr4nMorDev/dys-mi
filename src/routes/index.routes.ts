@@ -36,6 +36,7 @@ router.put(
   verifyUnified,
   matchmakingController.startmatching
 );
+
 router.get("/metrics", async (req: Request, res: Response) => {
   res.set("Content-Type", "text/plain");
   res.send(await metrics.metrics());

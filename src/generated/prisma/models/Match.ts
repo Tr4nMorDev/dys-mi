@@ -42,6 +42,7 @@ export type MatchMinAggregateOutputType = {
   player1Id: number | null
   player2Id: number | null
   matchedAt: Date | null
+  createdAt: Date | null
   status: $Enums.MatchStatus | null
 }
 
@@ -50,6 +51,7 @@ export type MatchMaxAggregateOutputType = {
   player1Id: number | null
   player2Id: number | null
   matchedAt: Date | null
+  createdAt: Date | null
   status: $Enums.MatchStatus | null
 }
 
@@ -58,6 +60,7 @@ export type MatchCountAggregateOutputType = {
   player1Id: number
   player2Id: number
   matchedAt: number
+  createdAt: number
   status: number
   _all: number
 }
@@ -80,6 +83,7 @@ export type MatchMinAggregateInputType = {
   player1Id?: true
   player2Id?: true
   matchedAt?: true
+  createdAt?: true
   status?: true
 }
 
@@ -88,6 +92,7 @@ export type MatchMaxAggregateInputType = {
   player1Id?: true
   player2Id?: true
   matchedAt?: true
+  createdAt?: true
   status?: true
 }
 
@@ -96,6 +101,7 @@ export type MatchCountAggregateInputType = {
   player1Id?: true
   player2Id?: true
   matchedAt?: true
+  createdAt?: true
   status?: true
   _all?: true
 }
@@ -189,8 +195,9 @@ export type MatchGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type MatchGroupByOutputType = {
   id: number
   player1Id: number
-  player2Id: number
-  matchedAt: Date
+  player2Id: number | null
+  matchedAt: Date | null
+  createdAt: Date
   status: $Enums.MatchStatus
   _count: MatchCountAggregateOutputType | null
   _avg: MatchAvgAggregateOutputType | null
@@ -220,19 +227,21 @@ export type MatchWhereInput = {
   NOT?: Prisma.MatchWhereInput | Prisma.MatchWhereInput[]
   id?: Prisma.IntFilter<"Match"> | number
   player1Id?: Prisma.IntFilter<"Match"> | number
-  player2Id?: Prisma.IntFilter<"Match"> | number
-  matchedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
+  player2Id?: Prisma.IntNullableFilter<"Match"> | number | null
+  matchedAt?: Prisma.DateTimeNullableFilter<"Match"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
   player1?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  player2?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  player2?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   game?: Prisma.XOR<Prisma.GameNullableScalarRelationFilter, Prisma.GameWhereInput> | null
 }
 
 export type MatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   player1Id?: Prisma.SortOrder
-  player2Id?: Prisma.SortOrder
-  matchedAt?: Prisma.SortOrder
+  player2Id?: Prisma.SortOrderInput | Prisma.SortOrder
+  matchedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   player1?: Prisma.UserOrderByWithRelationInput
   player2?: Prisma.UserOrderByWithRelationInput
@@ -245,19 +254,21 @@ export type MatchWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.MatchWhereInput[]
   NOT?: Prisma.MatchWhereInput | Prisma.MatchWhereInput[]
   player1Id?: Prisma.IntFilter<"Match"> | number
-  player2Id?: Prisma.IntFilter<"Match"> | number
-  matchedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
+  player2Id?: Prisma.IntNullableFilter<"Match"> | number | null
+  matchedAt?: Prisma.DateTimeNullableFilter<"Match"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
   player1?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  player2?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  player2?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   game?: Prisma.XOR<Prisma.GameNullableScalarRelationFilter, Prisma.GameWhereInput> | null
 }, "id">
 
 export type MatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   player1Id?: Prisma.SortOrder
-  player2Id?: Prisma.SortOrder
-  matchedAt?: Prisma.SortOrder
+  player2Id?: Prisma.SortOrderInput | Prisma.SortOrder
+  matchedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   _count?: Prisma.MatchCountOrderByAggregateInput
   _avg?: Prisma.MatchAvgOrderByAggregateInput
@@ -272,41 +283,46 @@ export type MatchScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MatchScalarWhereWithAggregatesInput | Prisma.MatchScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Match"> | number
   player1Id?: Prisma.IntWithAggregatesFilter<"Match"> | number
-  player2Id?: Prisma.IntWithAggregatesFilter<"Match"> | number
-  matchedAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
+  player2Id?: Prisma.IntNullableWithAggregatesFilter<"Match"> | number | null
+  matchedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Match"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
   status?: Prisma.EnumMatchStatusWithAggregatesFilter<"Match"> | $Enums.MatchStatus
 }
 
 export type MatchCreateInput = {
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   player1: Prisma.UserCreateNestedOneWithoutMatches1Input
-  player2: Prisma.UserCreateNestedOneWithoutMatches2Input
+  player2?: Prisma.UserCreateNestedOneWithoutMatches2Input
   game?: Prisma.GameCreateNestedOneWithoutMatchInput
 }
 
 export type MatchUncheckedCreateInput = {
   id?: number
   player1Id: number
-  player2Id: number
-  matchedAt?: Date | string
+  player2Id?: number | null
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   game?: Prisma.GameUncheckedCreateNestedOneWithoutMatchInput
 }
 
 export type MatchUpdateInput = {
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   player1?: Prisma.UserUpdateOneRequiredWithoutMatches1NestedInput
-  player2?: Prisma.UserUpdateOneRequiredWithoutMatches2NestedInput
+  player2?: Prisma.UserUpdateOneWithoutMatches2NestedInput
   game?: Prisma.GameUpdateOneWithoutMatchNestedInput
 }
 
 export type MatchUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   player1Id?: Prisma.IntFieldUpdateOperationsInput | number
-  player2Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  player2Id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   game?: Prisma.GameUncheckedUpdateOneWithoutMatchNestedInput
 }
@@ -314,21 +330,24 @@ export type MatchUncheckedUpdateInput = {
 export type MatchCreateManyInput = {
   id?: number
   player1Id: number
-  player2Id: number
-  matchedAt?: Date | string
+  player2Id?: number | null
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
 }
 
 export type MatchUpdateManyMutationInput = {
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
 }
 
 export type MatchUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   player1Id?: Prisma.IntFieldUpdateOperationsInput | number
-  player2Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  player2Id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
 }
 
@@ -347,6 +366,7 @@ export type MatchCountOrderByAggregateInput = {
   player1Id?: Prisma.SortOrder
   player2Id?: Prisma.SortOrder
   matchedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -361,6 +381,7 @@ export type MatchMaxOrderByAggregateInput = {
   player1Id?: Prisma.SortOrder
   player2Id?: Prisma.SortOrder
   matchedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -369,6 +390,7 @@ export type MatchMinOrderByAggregateInput = {
   player1Id?: Prisma.SortOrder
   player2Id?: Prisma.SortOrder
   matchedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -467,12 +489,24 @@ export type MatchUncheckedUpdateManyWithoutPlayer2NestedInput = {
   deleteMany?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
 export type EnumMatchStatusFieldUpdateOperationsInput = {
   set?: $Enums.MatchStatus
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type MatchCreateNestedOneWithoutGameInput = {
@@ -490,16 +524,18 @@ export type MatchUpdateOneRequiredWithoutGameNestedInput = {
 }
 
 export type MatchCreateWithoutPlayer1Input = {
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
-  player2: Prisma.UserCreateNestedOneWithoutMatches2Input
+  player2?: Prisma.UserCreateNestedOneWithoutMatches2Input
   game?: Prisma.GameCreateNestedOneWithoutMatchInput
 }
 
 export type MatchUncheckedCreateWithoutPlayer1Input = {
   id?: number
-  player2Id: number
-  matchedAt?: Date | string
+  player2Id?: number | null
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   game?: Prisma.GameUncheckedCreateNestedOneWithoutMatchInput
 }
@@ -515,7 +551,8 @@ export type MatchCreateManyPlayer1InputEnvelope = {
 }
 
 export type MatchCreateWithoutPlayer2Input = {
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   player1: Prisma.UserCreateNestedOneWithoutMatches1Input
   game?: Prisma.GameCreateNestedOneWithoutMatchInput
@@ -524,7 +561,8 @@ export type MatchCreateWithoutPlayer2Input = {
 export type MatchUncheckedCreateWithoutPlayer2Input = {
   id?: number
   player1Id: number
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   game?: Prisma.GameUncheckedCreateNestedOneWithoutMatchInput
 }
@@ -561,8 +599,9 @@ export type MatchScalarWhereInput = {
   NOT?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
   id?: Prisma.IntFilter<"Match"> | number
   player1Id?: Prisma.IntFilter<"Match"> | number
-  player2Id?: Prisma.IntFilter<"Match"> | number
-  matchedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
+  player2Id?: Prisma.IntNullableFilter<"Match"> | number | null
+  matchedAt?: Prisma.DateTimeNullableFilter<"Match"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
 }
 
@@ -583,17 +622,19 @@ export type MatchUpdateManyWithWhereWithoutPlayer2Input = {
 }
 
 export type MatchCreateWithoutGameInput = {
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
   player1: Prisma.UserCreateNestedOneWithoutMatches1Input
-  player2: Prisma.UserCreateNestedOneWithoutMatches2Input
+  player2?: Prisma.UserCreateNestedOneWithoutMatches2Input
 }
 
 export type MatchUncheckedCreateWithoutGameInput = {
   id?: number
   player1Id: number
-  player2Id: number
-  matchedAt?: Date | string
+  player2Id?: number | null
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
 }
 
@@ -614,58 +655,66 @@ export type MatchUpdateToOneWithWhereWithoutGameInput = {
 }
 
 export type MatchUpdateWithoutGameInput = {
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   player1?: Prisma.UserUpdateOneRequiredWithoutMatches1NestedInput
-  player2?: Prisma.UserUpdateOneRequiredWithoutMatches2NestedInput
+  player2?: Prisma.UserUpdateOneWithoutMatches2NestedInput
 }
 
 export type MatchUncheckedUpdateWithoutGameInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   player1Id?: Prisma.IntFieldUpdateOperationsInput | number
-  player2Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  player2Id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
 }
 
 export type MatchCreateManyPlayer1Input = {
   id?: number
-  player2Id: number
-  matchedAt?: Date | string
+  player2Id?: number | null
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
 }
 
 export type MatchCreateManyPlayer2Input = {
   id?: number
   player1Id: number
-  matchedAt?: Date | string
+  matchedAt?: Date | string | null
+  createdAt?: Date | string
   status?: $Enums.MatchStatus
 }
 
 export type MatchUpdateWithoutPlayer1Input = {
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
-  player2?: Prisma.UserUpdateOneRequiredWithoutMatches2NestedInput
+  player2?: Prisma.UserUpdateOneWithoutMatches2NestedInput
   game?: Prisma.GameUpdateOneWithoutMatchNestedInput
 }
 
 export type MatchUncheckedUpdateWithoutPlayer1Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  player2Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  player2Id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   game?: Prisma.GameUncheckedUpdateOneWithoutMatchNestedInput
 }
 
 export type MatchUncheckedUpdateManyWithoutPlayer1Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  player2Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  player2Id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
 }
 
 export type MatchUpdateWithoutPlayer2Input = {
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   player1?: Prisma.UserUpdateOneRequiredWithoutMatches1NestedInput
   game?: Prisma.GameUpdateOneWithoutMatchNestedInput
@@ -674,7 +723,8 @@ export type MatchUpdateWithoutPlayer2Input = {
 export type MatchUncheckedUpdateWithoutPlayer2Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   player1Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   game?: Prisma.GameUncheckedUpdateOneWithoutMatchNestedInput
 }
@@ -682,7 +732,8 @@ export type MatchUncheckedUpdateWithoutPlayer2Input = {
 export type MatchUncheckedUpdateManyWithoutPlayer2Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   player1Id?: Prisma.IntFieldUpdateOperationsInput | number
-  matchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  matchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
 }
 
@@ -693,9 +744,10 @@ export type MatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   player1Id?: boolean
   player2Id?: boolean
   matchedAt?: boolean
+  createdAt?: boolean
   status?: boolean
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
   game?: boolean | Prisma.Match$gameArgs<ExtArgs>
 }, ExtArgs["result"]["match"]>
 
@@ -704,9 +756,10 @@ export type MatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   player1Id?: boolean
   player2Id?: boolean
   matchedAt?: boolean
+  createdAt?: boolean
   status?: boolean
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
 }, ExtArgs["result"]["match"]>
 
 export type MatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -714,9 +767,10 @@ export type MatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   player1Id?: boolean
   player2Id?: boolean
   matchedAt?: boolean
+  createdAt?: boolean
   status?: boolean
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
 }, ExtArgs["result"]["match"]>
 
 export type MatchSelectScalar = {
@@ -724,36 +778,38 @@ export type MatchSelectScalar = {
   player1Id?: boolean
   player2Id?: boolean
   matchedAt?: boolean
+  createdAt?: boolean
   status?: boolean
 }
 
-export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "player1Id" | "player2Id" | "matchedAt" | "status", ExtArgs["result"]["match"]>
+export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "player1Id" | "player2Id" | "matchedAt" | "createdAt" | "status", ExtArgs["result"]["match"]>
 export type MatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
   game?: boolean | Prisma.Match$gameArgs<ExtArgs>
 }
 export type MatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
 }
 export type MatchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   player1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  player2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  player2?: boolean | Prisma.Match$player2Args<ExtArgs>
 }
 
 export type $MatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Match"
   objects: {
     player1: Prisma.$UserPayload<ExtArgs>
-    player2: Prisma.$UserPayload<ExtArgs>
+    player2: Prisma.$UserPayload<ExtArgs> | null
     game: Prisma.$GamePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     player1Id: number
-    player2Id: number
-    matchedAt: Date
+    player2Id: number | null
+    matchedAt: Date | null
+    createdAt: Date
     status: $Enums.MatchStatus
   }, ExtArgs["result"]["match"]>
   composites: {}
@@ -1150,7 +1206,7 @@ readonly fields: MatchFieldRefs;
 export interface Prisma__MatchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   player1<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  player2<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  player2<T extends Prisma.Match$player2Args<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Match$player2Args<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   game<T extends Prisma.Match$gameArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Match$gameArgs<ExtArgs>>): Prisma.Prisma__GameClient<runtime.Types.Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1185,6 +1241,7 @@ export interface MatchFieldRefs {
   readonly player1Id: Prisma.FieldRef<"Match", 'Int'>
   readonly player2Id: Prisma.FieldRef<"Match", 'Int'>
   readonly matchedAt: Prisma.FieldRef<"Match", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"Match", 'DateTime'>
   readonly status: Prisma.FieldRef<"Match", 'MatchStatus'>
 }
     
@@ -1579,6 +1636,25 @@ export type MatchDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Matches to delete.
    */
   limit?: number
+}
+
+/**
+ * Match.player2
+ */
+export type Match$player2Args<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

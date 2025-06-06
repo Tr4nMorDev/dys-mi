@@ -18,7 +18,8 @@ export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
 
 export const MatchStatus = {
   waiting: 'waiting',
-  matched: 'matched'
+  matched: 'matched',
+  timeout: 'timeout'
 } as const
 
 export type MatchStatus = (typeof MatchStatus)[keyof typeof MatchStatus]

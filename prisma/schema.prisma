@@ -34,17 +34,20 @@ model User {
 enum MatchStatus {
   waiting 
   matched
+  timeout
 }
 
 model Match {
   id         Int      @id @default(autoincrement())
   player1Id  Int
-  player2Id  Int
-  matchedAt  DateTime @default(now())
+  player2Id  Int?
+  matchedAt  DateTime?    // chỉ set khi đã match
+  createdAt  DateTime     @default(now()) // dùng để tính thời gian chờ
+
   status     MatchStatus @default(waiting) // waiting | matched
 
   player1    User @relation("Player1", fields: [player1Id], references: [id])
-  player2    User @relation("Player2", fields: [player2Id], references: [id])
+  player2    User? @relation("Player2", fields: [player2Id], references: [id])
 
   game       Game?
 }

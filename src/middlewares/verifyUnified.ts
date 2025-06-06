@@ -2,10 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { OAuth2Client } from "google-auth-library";
+// import { prismaVersion } from "../generated/prisma/internal/prismaNamespace";
+import { PrismaClient } from "../generated/prisma/client";
 // import axios from "axios";
 
 dotenv.config();
 
+const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -24,10 +27,7 @@ export const verifyUnified = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  console.log("Da tien vao ham ");
-  console.log(req.headers);
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
   if (!authHeader) {
     res.status(401).json({ message: "Unauthorized: No token provided" });
     return;
@@ -47,20 +47,25 @@ export const verifyUnified = async (
 
   // 2. Google Token
   try {
-    console.log(token);
     const ticket = await googleClient.verifyIdToken({
       idToken: token,
       audience: GOOGLE_CLIENT_ID,
     });
-    console.log(ticket);
 
     const payload = ticket.getPayload();
-    console.log(payload);
     if (payload?.email) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: payload.email },
+      });
+      if (!existingUser) {
+        res.status(401).json({ message: "User not found in system" });
+        return;
+      }
       req.user = {
-        email: payload.email,
-        name: payload.name,
-        picture: payload.picture,
+        id: existingUser.id,
+        email: existingUser.email,
+        name: existingUser.name,
+        picture: existingUser.avatar ?? payload.picture, // fallback nếu DB chưa có avatar
         provider: "GOOGLE",
       };
       return next();

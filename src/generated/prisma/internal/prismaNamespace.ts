@@ -694,6 +694,7 @@ export const MatchScalarFieldEnum = {
   player1Id: 'player1Id',
   player2Id: 'player2Id',
   matchedAt: 'matchedAt',
+  createdAt: 'createdAt',
   status: 'status'
 } as const
 
