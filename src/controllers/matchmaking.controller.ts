@@ -14,6 +14,7 @@ const MATCH_QUEUE_KEY = "matchmaking_queue";
 export const startmatching: RequestHandler = async (req, res) => {
   const user = (req as AuthenticatedRequest).user;
   const id = user?.id;
+  console.log("Da vao matching controler ");
   if (!id) {
     return res.status(401).json({ message: "Not find id" });
   }

@@ -1,30 +1,56 @@
 // src/socket/matchmaking.socket.ts
 import { Server, Socket } from "socket.io";
 import { handleMatchmaking } from "../services/matchmaking.service";
-const userSocketMap = new Map<number, Socket>(); // userId -> socket
+import { ClientToServerEvents, SeverToClientEvents } from "../types/express";
+import { MatchData } from "../types/express";
+import redis from "../lib/redis";
 
+const userSocketMap = new Map<
+  number,
+  Socket<SeverToClientEvents, ClientToServerEvents>
+>(); // userId -> socket
+const waitingQueue: number[] = []; // Dùng để lưu trữ lưu lượng người chơi . ( có thể thay thế bằng redis )
+const waitingPerson = "queue-two-persion";
+// socket.emit("event", data) Gửi đến client hiện tại vào hàm
+// socket.emit(..) Gửi sự kiện đến server
+// socket.on() Nghe dữ liệu từ client
+// io.emit("event" , data) Gửi đến tất cả các client đang kết nốis
+// io.to(id).emit() Gưi riêng dữ liệu đến clientclient
 export function matchmakingSocket(io: Server) {
   io.on("connection", (socket: Socket) => {
+    console.log("============================================================");
     console.log("Client connected:", socket.id);
     console.log("User Socket Map:", userSocketMap);
     socket.on("start_matching", async (userId: number) => {
       userSocketMap.set(userId, socket);
-      const result = await handleMatchmaking(userId);
-      if (result.status === "matched") {
-        const { player1Id, player2Id } = result.match;
+      if (waitingQueue.length > 0) {
+        const opponentId = waitingQueue.shift()!;
+        const opponentSocket = userSocketMap.get(opponentId);
 
-        const socket1 = userSocketMap.get(player1Id);
-        const socket2 = userSocketMap.get(player2Id);
+        const matchData: MatchData = {
+          id: Date.now(), // hoặc lấy từ DB nếu cần
+          player1Id: opponentId,
+          player2Id: userId,
+          status: "matched", // enum MatchStatus
+        };
 
-        // Gửi dữ liệu match cho cả 2
-        if (socket1) socket1.emit("matched", result.match);
-        if (socket2) socket2.emit("matched", result.match);
+        if (opponentSocket) opponentSocket.emit("matched", matchData);
+        socket.emit("matched", matchData);
 
-        console.log(`🔁 Matched: ${player1Id} vs ${player2Id}`);
-      } else if (result.status === "waiting") {
+        console.log("✅ Matched:", opponentId, "<->", userId);
+      } else {
+        // Nếu chưa ai chờ, đẩy vào hàng đợi
+        waitingQueue.push(userId);
         socket.emit("waiting");
-      } else if (result.status === "timeout") {
-        socket.emit("timeout");
+
+        // Option: timeout sau 15 giây
+        setTimeout(() => {
+          const index = waitingQueue.indexOf(userId);
+          if (index !== -1) {
+            waitingQueue.splice(index, 1);
+            socket.emit("timeout");
+          }
+        }, 15000);
       }
     });
     socket.on("disconnect", () => {
