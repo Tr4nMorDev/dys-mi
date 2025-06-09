@@ -19,8 +19,9 @@ export const verifyGoogleToken = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  console.log(" Buoc 1 : Da vao xac thuc google");
   const { idToken } = req.body;
-
+  console.log("idtoken : ", idToken);
   if (!idToken) {
     res.status(400).json({ message: "Thiếu token từ Google" });
     return;

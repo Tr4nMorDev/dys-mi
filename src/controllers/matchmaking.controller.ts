@@ -2,7 +2,10 @@ import { RequestHandler } from "express";
 import redis from "../lib/redis";
 import { AuthenticatedRequest } from "../types/express";
 import { PrismaClient } from "../generated/prisma/client";
-import { handleMatchmaking } from "../services/matchmaking.service";
+import {
+  enqueueUser,
+  removeUserFromQueue,
+} from "../services/matchmaking.service";
 const prisma = new PrismaClient();
 const MATCH_QUEUE_KEY = "matchmaking_queue";
 // logic
@@ -19,13 +22,26 @@ export const startmatching: RequestHandler = async (req, res) => {
     return res.status(401).json({ message: "Not find id" });
   }
   console.log("id : ", id);
-  const result = await handleMatchmaking(id);
-  if (result.status === "timeout") {
-    return res.status(408).json({ message: "No opponent found after 30s." });
-  }
-  return res.status(200).json(result);
+
+  await enqueueUser(id);
+  return res.status(200).json({
+    message: "Waiting for opponent...",
+    next: "Connect to WebSocket to receive match updates",
+  });
 };
-export default { startmatching };
+export const cancelmatching: RequestHandler = async (req, res) => {
+  const user = (req as AuthenticatedRequest).user;
+  const id = user?.id;
+  console.log("Da vao cancel matching controler ");
+  if (!id) {
+    return res.status(401).json({ message: "Not find id" });
+  }
+  removeUserFromQueue(id);
+  return res.status(200).json({
+    message: "Hủy tìm trận ...",
+  });
+};
+export default { startmatching, cancelmatching };
 
 // const currentQueue = (await redis.lRange(MATCH_QUEUE_KEY, 0, -1)) as string[]; // xem toàn bộ danh sách chờ
 // // lrage có tham số (string " định danh " , 0 điểm bắt đầu , -1 điểm kết thúc )

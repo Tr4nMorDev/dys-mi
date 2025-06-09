@@ -36,6 +36,11 @@ router.put(
   verifyUnified,
   matchmakingController.startmatching
 );
+router.put(
+  "/api/matchmaking/cancel",
+  verifyUnified,
+  matchmakingController.cancelmatching
+);
 
 router.get("/metrics", async (req: Request, res: Response) => {
   res.set("Content-Type", "text/plain");

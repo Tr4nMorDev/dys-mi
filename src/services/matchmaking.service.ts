@@ -3,83 +3,46 @@
 import redis from "../lib/redis";
 import { PrismaClient } from "../generated/prisma/client";
 import MatchModel from "../models/match.model";
+import { Match } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 const MATCH_QUEUE_KEY = "matchmaking_queue";
 
-export async function handleMatchmaking(userId: number) {
-  console.log("============================================================");
-  const currentQueue = (await redis.lRange(MATCH_QUEUE_KEY, 0, -1)) as string[];
-  for (const opponentStr of currentQueue) {
-    console.log("currentQueue : ", currentQueue);
-    console.log("opponenStr : ", opponentStr);
-    const opponentId = parseInt(opponentStr);
-    if (opponentId !== userId) {
-      await redis.lRem(MATCH_QUEUE_KEY, 0, opponentStr);
-      //   const match = await prisma.match.create({
-      //     data: {
-      //       playerXId: opponentId,
-      //       playerOId: userId,
-      //       status: "matched",
-      //     },
-      //   });
-      const match = await MatchModel.create({
-        player1Id: opponentId,
-        player2Id: userId,
-        status: "matched",
-        matchedAt: new Date(),
-      });
-      return { status: "matched", matchId: match };
+// export async function handleMatchmaking(userId: number) {
+//   const opponentId = await tryFindOpponent(userId);
+//   console.log("opponentId : ", opponentId);
+//   if (opponentId) {
+//     const match = await createMatch(userId, opponentId);
+//   }
+// }
+
+export async function tryFindOpponent(userId: number): Promise<number | null> {
+  const queue = await redis.lRange(MATCH_QUEUE_KEY, 0, -1);
+  for (const opponent of queue) {
+    const id = parseInt(opponent);
+    if (id !== userId) {
+      await redis.lRem(MATCH_QUEUE_KEY, 0, opponent);
+      return id;
     }
   }
-  await redis.rPush(MATCH_QUEUE_KEY, userId.toString());
-  return { status: "waiting" };
+  return null;
+} // Hàm setup không cho queue là chính user đó
+export async function createMatch(p1: number, p2: number): Promise<Match> {
+  return MatchModel.create({
+    player1Id: p1,
+    player2Id: p2,
+    matchedAt: new Date(),
+    status: "matched",
+  });
 }
-// const waitingMatch = await prisma.match.findFirst({
-//   where: {
-//     AND: [
-//       { userIdA: userId },
-//       { userIdB: currentQueue[0] },
-//       { status: "waiting" },
-//     ],
-//   },
-// });
-// console.log("waitingMatch : ", waitingMatch);
-// if (waitingMatch) {
-//   const now = new Date();
-//   const elapsedSeconds =
-// if (waitingMatch) {
-//   const now = new Date();
-//   const elapsedSeconds =
-//     (now.getTime() - new Date(waitingMatch.createdAt).getTime()) / 1000;
-//   console.log("elapsedSeconds : ", elapsedSeconds);
-//   if (elapsedSeconds >= 30) {
-//     await prisma.match.update({
-//       where: { id: waitingMatch.id },
-//       data: { status: "timeout" },
-//     });
-//     await redis.lRem(MATCH_QUEUE_KEY, 0, userId.toString());
-//     return { status: "timeout" };
-//   }
-//     }
 
-//     return { status: "waiting" };
-// //   }
-//   if (currentQueue.length === 1) {
-//   }
-//   const opponentIdRaw = await redis.lPop(MATCH_QUEUE_KEY);
-//   const opponentId = opponentIdRaw ? parseInt(opponentIdRaw) : null;
+export async function enqueueUser(userId: number) {
+  await redis.rPush(MATCH_QUEUE_KEY, userId.toString());
+} // hàm push vào queue
+export async function isStillWaiting(userId: number): Promise<boolean> {
+  const queue = await redis.lRange(MATCH_QUEUE_KEY, 0, -1);
+  return queue.includes(userId.toString());
+}
 
-//   if (!opponentId || opponentId === userId) {
-//     await redis.lPush(MATCH_QUEUE_KEY, userId.toString());
-//     return { status: "waiting" };
-//   }
-
-//   const match = await MatchModel.create({
-//     player1Id: opponentId,
-//     player2Id: userId,
-//     status: "matched",
-//     matchedAt: new Date(),
-//   });
-
-//   return { status: "matched", match };
-// }
+export async function removeUserFromQueue(userId: number) {
+  await redis.lRem(MATCH_QUEUE_KEY, 0, userId.toString());
+}
