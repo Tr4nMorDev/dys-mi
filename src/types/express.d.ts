@@ -11,13 +11,6 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export interface MatchData {
-  id: number;
-  player1Id: number;
-  player2Id?: number;
-  status: MatchStatus;
-}
-
 //Matching-socket-interact
 export interface ClientToServerEvents {
   start_matching: (userId: number) => void;
@@ -33,3 +26,11 @@ export interface SeverToClientEvents {
 }
 
 export type MatchStatus = "waiting" | "matched" | "timeout";
+export interface MatchData {
+  id: number;
+  player1Id: number;
+  player2Id?: number;
+  status: MatchStatus;
+  playerXId: number; // người chơi X
+  playerOId: number; // người chơi O
+}

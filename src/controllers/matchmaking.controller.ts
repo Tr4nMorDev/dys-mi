@@ -17,13 +17,12 @@ const MATCH_QUEUE_KEY = "matchmaking_queue";
 export const startmatching: RequestHandler = async (req, res) => {
   const user = (req as AuthenticatedRequest).user;
   const id = user?.id;
-  console.log("Da vao matching controler ");
   if (!id) {
     return res.status(401).json({ message: "Not find id" });
   }
   console.log("id : ", id);
 
-  await enqueueUser(id);
+  // await enqueueUser(id);
   return res.status(200).json({
     message: "Waiting for opponent...",
     next: "Connect to WebSocket to receive match updates",
@@ -32,7 +31,6 @@ export const startmatching: RequestHandler = async (req, res) => {
 export const cancelmatching: RequestHandler = async (req, res) => {
   const user = (req as AuthenticatedRequest).user;
   const id = user?.id;
-  console.log("Da vao cancel matching controler ");
   if (!id) {
     return res.status(401).json({ message: "Not find id" });
   }
