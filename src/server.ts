@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { matchmakingSocket } from "./socket/matchmaking.socket";
 import pool from "./config/db";
 import { connectRedis } from "./lib/redis";
+import { socketAuthMiddleware } from "./middlewares/socket.middleware";
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ async function startServer() {
         methods: ["GET", "POST"],
       },
     });
-
+    io.use(socketAuthMiddleware);
     // Gắn socket handlers
     matchmakingSocket(io);
 

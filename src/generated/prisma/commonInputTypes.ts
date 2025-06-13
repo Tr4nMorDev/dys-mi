@@ -246,13 +246,6 @@ export type JsonFilterBase<$PrismaModel = never> = {
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
 }
 
-export type EnumGameStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGameStatusFilter<$PrismaModel> | $Enums.GameStatus
-}
-
 export type JsonWithAggregatesFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
@@ -278,16 +271,6 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedJsonFilter<$PrismaModel>
   _max?: Prisma.NestedJsonFilter<$PrismaModel>
-}
-
-export type EnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGameStatusWithAggregatesFilter<$PrismaModel> | $Enums.GameStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGameStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGameStatusFilter<$PrismaModel>
 }
 
 export type NestedIntFilter<$PrismaModel = never> = {
@@ -512,13 +495,6 @@ export type NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumGameStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGameStatusFilter<$PrismaModel> | $Enums.GameStatus
-}
-
 export type NestedJsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -541,16 +517,6 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-}
-
-export type NestedEnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGameStatusWithAggregatesFilter<$PrismaModel> | $Enums.GameStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGameStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGameStatusFilter<$PrismaModel>
 }
 
 

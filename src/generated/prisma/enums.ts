@@ -23,12 +23,3 @@ export const MatchStatus = {
 } as const
 
 export type MatchStatus = (typeof MatchStatus)[keyof typeof MatchStatus]
-
-
-export const GameStatus = {
-  ongoing: 'ongoing',
-  finished: 'finished',
-  draw: 'draw'
-} as const
-
-export type GameStatus = (typeof GameStatus)[keyof typeof GameStatus]

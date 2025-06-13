@@ -60,6 +60,3 @@ export const AuthProvider = $Enums.AuthProvider
 
 export type MatchStatus = $Enums.MatchStatus
 export const MatchStatus = $Enums.MatchStatus
-
-export type GameStatus = $Enums.GameStatus
-export const GameStatus = $Enums.GameStatus

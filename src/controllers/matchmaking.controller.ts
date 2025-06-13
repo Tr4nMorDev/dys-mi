@@ -39,7 +39,17 @@ export const cancelmatching: RequestHandler = async (req, res) => {
     message: "Hủy tìm trận ...",
   });
 };
-export default { startmatching, cancelmatching };
+export const exitmatch: RequestHandler = async (req, res) => {
+  const user = (req as AuthenticatedRequest).user;
+  const id = user?.id;
+  if (!id) {
+    return res.status(401).json({ message: "Not find id" });
+  }
+  return res.status(200).json({
+    message: "Exit trận ",
+  });
+};
+export default { startmatching, cancelmatching, exitmatch };
 
 // const currentQueue = (await redis.lRange(MATCH_QUEUE_KEY, 0, -1)) as string[]; // xem toàn bộ danh sách chờ
 // // lrage có tham số (string " định danh " , 0 điểm bắt đầu , -1 điểm kết thúc )

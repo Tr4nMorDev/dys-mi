@@ -4,17 +4,10 @@ import redis from "../lib/redis";
 import { PrismaClient } from "../generated/prisma/client";
 import MatchModel from "../models/match.model";
 import { Match } from "../generated/prisma/client";
+import { Server } from "socket.io";
 const prisma = new PrismaClient();
 const MATCH_QUEUE_KEY = "matchmaking_queue";
 import { MatchData } from "../types/express";
-
-// export async function handleMatchmaking(userId: number) {
-//   const opponentId = await tryFindOpponent(userId);
-//   console.log("opponentId : ", opponentId);
-//   if (opponentId) {
-//     const match = await createMatch(userId, opponentId);
-//   }
-// }
 
 export async function tryFindOpponent(userId: number): Promise<number | null> {
   const queue = await redis.lRange(MATCH_QUEUE_KEY, 0, -1);
@@ -52,12 +45,15 @@ export async function createMatch(player1Id: number, player2Id: number) {
       select: { id: true, name: true, avatar: true },
     }),
   ]);
-  await prisma.game.create({
+  const boardSize = 20;
+  const emptyBoard = Array(boardSize * boardSize).fill(null);
+
+  const game = await prisma.game.create({
     data: {
       matchId: match.id,
       xPlayerId,
       oPlayerId,
-      boardState: {}, // hoặc [] tùy theo bạn lưu kiểu gì
+      boardState: emptyBoard,
     },
   });
 
@@ -72,20 +68,23 @@ export async function createMatch(player1Id: number, player2Id: number) {
       X: xPlayer,
       O: oPlayer,
     },
+    gameId: game.id,
+    board: game.boardState,
   };
-}
+} // table cập nhật toàn bộ sau khi matched
 
 export async function enqueueUser(userId: number) {
   await redis.rPush(MATCH_QUEUE_KEY, userId.toString());
-} // hàm push vào queue
+} // hàm push vào queue ( lí do không trả Promise vì cái này chỉ là tiến trình đợi chưa càn có kết quả )
+// không thể không sử dụng await vì lí do sẽ gặp bug ngầm race condition (Lock process)
 export async function isStillWaiting(userId: number): Promise<boolean> {
   const queue = await redis.lRange(MATCH_QUEUE_KEY, 0, -1);
   return queue.includes(userId.toString());
-}
+} // Hàm check xem và lấy ra chuỗi userId trong queue hiện tại
 
 export async function removeUserFromQueue(userId: number) {
   await redis.lRem(MATCH_QUEUE_KEY, 0, userId.toString());
-}
+} // xóa 1 user
 
 // Tìm trận đang active theo userId (nếu bạn có lưu Match vào Redis hoặc DB)
 export async function getActiveMatch(
@@ -106,4 +105,30 @@ export async function storeActiveMatch(match: MatchData) {
 export async function removeActiveMatch(userId1: number, userId2: number) {
   await redis.del(`active_match:${userId1}`);
   await redis.del(`active_match:${userId2}`);
+}
+export async function handleWaitingUserDisconnect(userId: number) {
+  await redis.del(`socket:${userId}`);
+  await removeUserFromQueue(userId);
+}
+export async function handleMatchedUserDisconnect(
+  userId: number,
+  matchId: string,
+  io: Server
+) {
+  const opponentId = await redis.get(`match:${matchId}:opponent:${userId}`);
+  if (opponentId) {
+    const opponentSocketId = await redis.get(`socket:${opponentId}`);
+    if (opponentSocketId) {
+      io.to(opponentSocketId).emit("opponentDisconnected");
+    }
+
+    // Dọn sạch match
+    await redis.del(`user:${userId}:matchId`);
+    await redis.del(`user:${opponentId}:matchId`);
+    await redis.del(`match:${matchId}`);
+    await redis.del(`match:${matchId}:opponent:${userId}`);
+    await redis.del(`match:${matchId}:opponent:${opponentId}`);
+  }
+
+  await redis.del(`socket:${userId}`);
 }

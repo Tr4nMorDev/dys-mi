@@ -30,6 +30,7 @@ export type GameAvgAggregateOutputType = {
   matchId: number | null
   xPlayerId: number | null
   oPlayerId: number | null
+  winnerId: number | null
 }
 
 export type GameSumAggregateOutputType = {
@@ -37,6 +38,7 @@ export type GameSumAggregateOutputType = {
   matchId: number | null
   xPlayerId: number | null
   oPlayerId: number | null
+  winnerId: number | null
 }
 
 export type GameMinAggregateOutputType = {
@@ -44,9 +46,9 @@ export type GameMinAggregateOutputType = {
   matchId: number | null
   xPlayerId: number | null
   oPlayerId: number | null
-  turn: string | null
-  status: $Enums.GameStatus | null
+  winnerId: number | null
   createdAt: Date | null
+  finishedAt: Date | null
 }
 
 export type GameMaxAggregateOutputType = {
@@ -54,9 +56,9 @@ export type GameMaxAggregateOutputType = {
   matchId: number | null
   xPlayerId: number | null
   oPlayerId: number | null
-  turn: string | null
-  status: $Enums.GameStatus | null
+  winnerId: number | null
   createdAt: Date | null
+  finishedAt: Date | null
 }
 
 export type GameCountAggregateOutputType = {
@@ -65,9 +67,9 @@ export type GameCountAggregateOutputType = {
   xPlayerId: number
   oPlayerId: number
   boardState: number
-  turn: number
-  status: number
+  winnerId: number
   createdAt: number
+  finishedAt: number
   _all: number
 }
 
@@ -77,6 +79,7 @@ export type GameAvgAggregateInputType = {
   matchId?: true
   xPlayerId?: true
   oPlayerId?: true
+  winnerId?: true
 }
 
 export type GameSumAggregateInputType = {
@@ -84,6 +87,7 @@ export type GameSumAggregateInputType = {
   matchId?: true
   xPlayerId?: true
   oPlayerId?: true
+  winnerId?: true
 }
 
 export type GameMinAggregateInputType = {
@@ -91,9 +95,9 @@ export type GameMinAggregateInputType = {
   matchId?: true
   xPlayerId?: true
   oPlayerId?: true
-  turn?: true
-  status?: true
+  winnerId?: true
   createdAt?: true
+  finishedAt?: true
 }
 
 export type GameMaxAggregateInputType = {
@@ -101,9 +105,9 @@ export type GameMaxAggregateInputType = {
   matchId?: true
   xPlayerId?: true
   oPlayerId?: true
-  turn?: true
-  status?: true
+  winnerId?: true
   createdAt?: true
+  finishedAt?: true
 }
 
 export type GameCountAggregateInputType = {
@@ -112,9 +116,9 @@ export type GameCountAggregateInputType = {
   xPlayerId?: true
   oPlayerId?: true
   boardState?: true
-  turn?: true
-  status?: true
+  winnerId?: true
   createdAt?: true
+  finishedAt?: true
   _all?: true
 }
 
@@ -210,9 +214,9 @@ export type GameGroupByOutputType = {
   xPlayerId: number
   oPlayerId: number
   boardState: runtime.JsonValue
-  turn: string
-  status: $Enums.GameStatus
+  winnerId: number | null
   createdAt: Date
+  finishedAt: Date | null
   _count: GameCountAggregateOutputType | null
   _avg: GameAvgAggregateOutputType | null
   _sum: GameSumAggregateOutputType | null
@@ -244,9 +248,9 @@ export type GameWhereInput = {
   xPlayerId?: Prisma.IntFilter<"Game"> | number
   oPlayerId?: Prisma.IntFilter<"Game"> | number
   boardState?: Prisma.JsonFilter<"Game">
-  turn?: Prisma.StringFilter<"Game"> | string
-  status?: Prisma.EnumGameStatusFilter<"Game"> | $Enums.GameStatus
+  winnerId?: Prisma.IntNullableFilter<"Game"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Game"> | Date | string
+  finishedAt?: Prisma.DateTimeNullableFilter<"Game"> | Date | string | null
   match?: Prisma.XOR<Prisma.MatchScalarRelationFilter, Prisma.MatchWhereInput>
   xPlayer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   oPlayer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -258,9 +262,9 @@ export type GameOrderByWithRelationInput = {
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
   boardState?: Prisma.SortOrder
-  turn?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   match?: Prisma.MatchOrderByWithRelationInput
   xPlayer?: Prisma.UserOrderByWithRelationInput
   oPlayer?: Prisma.UserOrderByWithRelationInput
@@ -275,9 +279,9 @@ export type GameWhereUniqueInput = Prisma.AtLeast<{
   xPlayerId?: Prisma.IntFilter<"Game"> | number
   oPlayerId?: Prisma.IntFilter<"Game"> | number
   boardState?: Prisma.JsonFilter<"Game">
-  turn?: Prisma.StringFilter<"Game"> | string
-  status?: Prisma.EnumGameStatusFilter<"Game"> | $Enums.GameStatus
+  winnerId?: Prisma.IntNullableFilter<"Game"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Game"> | Date | string
+  finishedAt?: Prisma.DateTimeNullableFilter<"Game"> | Date | string | null
   match?: Prisma.XOR<Prisma.MatchScalarRelationFilter, Prisma.MatchWhereInput>
   xPlayer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   oPlayer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -289,9 +293,9 @@ export type GameOrderByWithAggregationInput = {
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
   boardState?: Prisma.SortOrder
-  turn?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.GameCountOrderByAggregateInput
   _avg?: Prisma.GameAvgOrderByAggregateInput
   _max?: Prisma.GameMaxOrderByAggregateInput
@@ -308,16 +312,16 @@ export type GameScalarWhereWithAggregatesInput = {
   xPlayerId?: Prisma.IntWithAggregatesFilter<"Game"> | number
   oPlayerId?: Prisma.IntWithAggregatesFilter<"Game"> | number
   boardState?: Prisma.JsonWithAggregatesFilter<"Game">
-  turn?: Prisma.StringWithAggregatesFilter<"Game"> | string
-  status?: Prisma.EnumGameStatusWithAggregatesFilter<"Game"> | $Enums.GameStatus
+  winnerId?: Prisma.IntNullableWithAggregatesFilter<"Game"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Game"> | Date | string
+  finishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Game"> | Date | string | null
 }
 
 export type GameCreateInput = {
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
   match: Prisma.MatchCreateNestedOneWithoutGameInput
   xPlayer: Prisma.UserCreateNestedOneWithoutGamesAsXInput
   oPlayer: Prisma.UserCreateNestedOneWithoutGamesAsOInput
@@ -328,17 +332,17 @@ export type GameUncheckedCreateInput = {
   matchId: number
   xPlayerId: number
   oPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameUpdateInput = {
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   match?: Prisma.MatchUpdateOneRequiredWithoutGameNestedInput
   xPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsXNestedInput
   oPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsONestedInput
@@ -350,9 +354,9 @@ export type GameUncheckedUpdateInput = {
   xPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   oPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameCreateManyInput = {
@@ -360,17 +364,17 @@ export type GameCreateManyInput = {
   matchId: number
   xPlayerId: number
   oPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameUpdateManyMutationInput = {
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameUncheckedUpdateManyInput = {
@@ -379,9 +383,9 @@ export type GameUncheckedUpdateManyInput = {
   xPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   oPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameListRelationFilter = {
@@ -405,9 +409,9 @@ export type GameCountOrderByAggregateInput = {
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
   boardState?: Prisma.SortOrder
-  turn?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  finishedAt?: Prisma.SortOrder
 }
 
 export type GameAvgOrderByAggregateInput = {
@@ -415,6 +419,7 @@ export type GameAvgOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrder
 }
 
 export type GameMaxOrderByAggregateInput = {
@@ -422,9 +427,9 @@ export type GameMaxOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
-  turn?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  finishedAt?: Prisma.SortOrder
 }
 
 export type GameMinOrderByAggregateInput = {
@@ -432,9 +437,9 @@ export type GameMinOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
-  turn?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  finishedAt?: Prisma.SortOrder
 }
 
 export type GameSumOrderByAggregateInput = {
@@ -442,6 +447,7 @@ export type GameSumOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   xPlayerId?: Prisma.SortOrder
   oPlayerId?: Prisma.SortOrder
+  winnerId?: Prisma.SortOrder
 }
 
 export type GameCreateNestedManyWithoutXPlayerInput = {
@@ -560,15 +566,11 @@ export type GameUncheckedUpdateOneWithoutMatchNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GameUpdateToOneWithWhereWithoutMatchInput, Prisma.GameUpdateWithoutMatchInput>, Prisma.GameUncheckedUpdateWithoutMatchInput>
 }
 
-export type EnumGameStatusFieldUpdateOperationsInput = {
-  set?: $Enums.GameStatus
-}
-
 export type GameCreateWithoutXPlayerInput = {
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
   match: Prisma.MatchCreateNestedOneWithoutGameInput
   oPlayer: Prisma.UserCreateNestedOneWithoutGamesAsOInput
 }
@@ -577,10 +579,10 @@ export type GameUncheckedCreateWithoutXPlayerInput = {
   id?: number
   matchId: number
   oPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameCreateOrConnectWithoutXPlayerInput = {
@@ -594,10 +596,10 @@ export type GameCreateManyXPlayerInputEnvelope = {
 }
 
 export type GameCreateWithoutOPlayerInput = {
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
   match: Prisma.MatchCreateNestedOneWithoutGameInput
   xPlayer: Prisma.UserCreateNestedOneWithoutGamesAsXInput
 }
@@ -606,10 +608,10 @@ export type GameUncheckedCreateWithoutOPlayerInput = {
   id?: number
   matchId: number
   xPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameCreateOrConnectWithoutOPlayerInput = {
@@ -647,9 +649,9 @@ export type GameScalarWhereInput = {
   xPlayerId?: Prisma.IntFilter<"Game"> | number
   oPlayerId?: Prisma.IntFilter<"Game"> | number
   boardState?: Prisma.JsonFilter<"Game">
-  turn?: Prisma.StringFilter<"Game"> | string
-  status?: Prisma.EnumGameStatusFilter<"Game"> | $Enums.GameStatus
+  winnerId?: Prisma.IntNullableFilter<"Game"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Game"> | Date | string
+  finishedAt?: Prisma.DateTimeNullableFilter<"Game"> | Date | string | null
 }
 
 export type GameUpsertWithWhereUniqueWithoutOPlayerInput = {
@@ -669,10 +671,10 @@ export type GameUpdateManyWithWhereWithoutOPlayerInput = {
 }
 
 export type GameCreateWithoutMatchInput = {
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
   xPlayer: Prisma.UserCreateNestedOneWithoutGamesAsXInput
   oPlayer: Prisma.UserCreateNestedOneWithoutGamesAsOInput
 }
@@ -681,10 +683,10 @@ export type GameUncheckedCreateWithoutMatchInput = {
   id?: number
   xPlayerId: number
   oPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameCreateOrConnectWithoutMatchInput = {
@@ -705,9 +707,9 @@ export type GameUpdateToOneWithWhereWithoutMatchInput = {
 
 export type GameUpdateWithoutMatchInput = {
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   xPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsXNestedInput
   oPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsONestedInput
 }
@@ -717,36 +719,36 @@ export type GameUncheckedUpdateWithoutMatchInput = {
   xPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   oPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameCreateManyXPlayerInput = {
   id?: number
   matchId: number
   oPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameCreateManyOPlayerInput = {
   id?: number
   matchId: number
   xPlayerId: number
-  boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: string
-  status?: $Enums.GameStatus
+  boardState: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  winnerId?: number | null
   createdAt?: Date | string
+  finishedAt?: Date | string | null
 }
 
 export type GameUpdateWithoutXPlayerInput = {
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   match?: Prisma.MatchUpdateOneRequiredWithoutGameNestedInput
   oPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsONestedInput
 }
@@ -756,9 +758,9 @@ export type GameUncheckedUpdateWithoutXPlayerInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   oPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameUncheckedUpdateManyWithoutXPlayerInput = {
@@ -766,16 +768,16 @@ export type GameUncheckedUpdateManyWithoutXPlayerInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   oPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameUpdateWithoutOPlayerInput = {
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   match?: Prisma.MatchUpdateOneRequiredWithoutGameNestedInput
   xPlayer?: Prisma.UserUpdateOneRequiredWithoutGamesAsXNestedInput
 }
@@ -785,9 +787,9 @@ export type GameUncheckedUpdateWithoutOPlayerInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   xPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GameUncheckedUpdateManyWithoutOPlayerInput = {
@@ -795,9 +797,9 @@ export type GameUncheckedUpdateManyWithoutOPlayerInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   xPlayerId?: Prisma.IntFieldUpdateOperationsInput | number
   boardState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  turn?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  winnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -808,9 +810,9 @@ export type GameSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   xPlayerId?: boolean
   oPlayerId?: boolean
   boardState?: boolean
-  turn?: boolean
-  status?: boolean
+  winnerId?: boolean
   createdAt?: boolean
+  finishedAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   xPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   oPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -822,9 +824,9 @@ export type GameSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   xPlayerId?: boolean
   oPlayerId?: boolean
   boardState?: boolean
-  turn?: boolean
-  status?: boolean
+  winnerId?: boolean
   createdAt?: boolean
+  finishedAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   xPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   oPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -836,9 +838,9 @@ export type GameSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   xPlayerId?: boolean
   oPlayerId?: boolean
   boardState?: boolean
-  turn?: boolean
-  status?: boolean
+  winnerId?: boolean
   createdAt?: boolean
+  finishedAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   xPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   oPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -850,12 +852,12 @@ export type GameSelectScalar = {
   xPlayerId?: boolean
   oPlayerId?: boolean
   boardState?: boolean
-  turn?: boolean
-  status?: boolean
+  winnerId?: boolean
   createdAt?: boolean
+  finishedAt?: boolean
 }
 
-export type GameOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matchId" | "xPlayerId" | "oPlayerId" | "boardState" | "turn" | "status" | "createdAt", ExtArgs["result"]["game"]>
+export type GameOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matchId" | "xPlayerId" | "oPlayerId" | "boardState" | "winnerId" | "createdAt" | "finishedAt", ExtArgs["result"]["game"]>
 export type GameInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   xPlayer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -885,9 +887,9 @@ export type $GamePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     xPlayerId: number
     oPlayerId: number
     boardState: runtime.JsonValue
-    turn: string
-    status: $Enums.GameStatus
+    winnerId: number | null
     createdAt: Date
+    finishedAt: Date | null
   }, ExtArgs["result"]["game"]>
   composites: {}
 }
@@ -1319,9 +1321,9 @@ export interface GameFieldRefs {
   readonly xPlayerId: Prisma.FieldRef<"Game", 'Int'>
   readonly oPlayerId: Prisma.FieldRef<"Game", 'Int'>
   readonly boardState: Prisma.FieldRef<"Game", 'Json'>
-  readonly turn: Prisma.FieldRef<"Game", 'String'>
-  readonly status: Prisma.FieldRef<"Game", 'GameStatus'>
+  readonly winnerId: Prisma.FieldRef<"Game", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Game", 'DateTime'>
+  readonly finishedAt: Prisma.FieldRef<"Game", 'DateTime'>
 }
     
 
