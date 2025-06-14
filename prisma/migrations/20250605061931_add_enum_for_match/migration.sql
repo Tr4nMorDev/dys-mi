@@ -1,0 +1,7 @@
+-- AlterEnum
+ALTER TYPE "MatchStatus" ADD VALUE 'timeout';
+
+-- AlterTable
+ALTER TABLE "Match" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "matchedAt" DROP NOT NULL,
+ALTER COLUMN "matchedAt" DROP DEFAULT;

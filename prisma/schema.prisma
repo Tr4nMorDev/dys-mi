@@ -34,39 +34,36 @@ model User {
 enum MatchStatus {
   waiting 
   matched
+  timeout
 }
 
 model Match {
   id         Int      @id @default(autoincrement())
   player1Id  Int
-  player2Id  Int
-  matchedAt  DateTime @default(now())
+  player2Id  Int?
+  matchedAt  DateTime?    // chỉ set khi đã match
+  createdAt  DateTime     @default(now()) // dùng để tính thời gian chờ
+
   status     MatchStatus @default(waiting) // waiting | matched
 
   player1    User @relation("Player1", fields: [player1Id], references: [id])
-  player2    User @relation("Player2", fields: [player2Id], references: [id])
+  player2    User? @relation("Player2", fields: [player2Id], references: [id])
 
   game       Game?
 }
-
-enum GameStatus {
-  ongoing 
-  finished
-  draw
-}
-
 model Game {
-  id         Int      @id @default(autoincrement())
-  matchId    Int      @unique
-  xPlayerId  Int
-  oPlayerId  Int
-  boardState Json     @default("{}") // có thể lưu array nước đi
-  turn       String   @default("X")  // X | O
-  status     GameStatus @default(ongoing) // ongoing | finished | draw
-  createdAt  DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  matchId     Int      @unique
+  xPlayerId   Int
+  oPlayerId   Int
+  boardState  Json
+  winnerId    Int?     // chỉ lưu ID, không cần object winner
+  createdAt   DateTime @default(now())
+  finishedAt  DateTime?
 
-  match      Match    @relation(fields: [matchId], references: [id])
-  xPlayer    User     @relation("XPlayer", fields: [xPlayerId], references: [id])
-  oPlayer    User     @relation("OPlayer", fields: [oPlayerId], references: [id])
+  match       Match    @relation(fields: [matchId], references: [id])
+  xPlayer     User     @relation("XPlayer", fields: [xPlayerId], references: [id])
+  oPlayer     User     @relation("OPlayer", fields: [oPlayerId], references: [id])
 }
+
 //npx prisma migrate dev --name reset-db-add-game

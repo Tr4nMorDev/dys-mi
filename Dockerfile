@@ -1,28 +1,30 @@
-# Bước 1: Base image (Node 18)
+# Base image
 FROM node:18
 
-# Bước 2: Thư mục làm việc
 WORKDIR /app
 
-# Bước 3: Copy package.json và package-lock.json (nếu có)
+# Copy and install dependencies
 COPY package*.json ./
-
-# Bước 4: Cài dependencies
 RUN npm install
 
-# Bước 5: Copy toàn bộ code vào container
+# Copy project files
 COPY prisma ./prisma
 COPY src ./src
-COPY tsconfig.json .
+COPY tsconfig.json ./
 
-# Bước 6: Cài Prisma CLI và generate client
+# Copy wait-for-it.sh vào container và cấp quyền thực thi
+COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
+# Generate Prisma client INSIDE container
 RUN npx prisma generate
 
-# Bước 7: Build TypeScript sang JavaScript
+# Build TypeScript
 RUN npm run build
 
-# Bước 8: Expose port app chạy
 EXPOSE 3000
 
-# Bước 9: Chạy file js build ra (thường là trong thư mục dist)
+# Sửa CMD thành ENTRYPOINT để dùng wait-for-it.sh chờ postgres trước khi chạy app
+ENTRYPOINT ["/usr/local/bin/wait-for-it.sh", "postgres-db:5432", "--timeout=60", "--"]
+
 CMD ["node", "dist/server.js"]

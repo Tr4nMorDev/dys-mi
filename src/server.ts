@@ -1,22 +1,41 @@
-// src/server.ts
-
+import http from "http";
+import { Server } from "socket.io";
 import app from "./app";
+import dotenv from "dotenv";
+import { matchmakingSocket } from "./socket/matchmaking.socket";
 import pool from "./config/db";
-import { Request, Response } from "express";
+import { connectRedis } from "./lib/redis";
+import { socketAuthMiddleware } from "./middlewares/socket.middleware";
+
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
-async function startServer(): Promise<void> {
+async function startServer() {
   try {
-    // Kiểm tra kết nối đến PostgreSQL
     await pool.query("SELECT 1");
     console.log("✅ Connected to PostgreSQL");
 
-    // Gắn pool vào app.locals để sử dụng trong các middleware, routes, v.v.
     app.locals.db = pool;
+    connectRedis();
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server is running at http://localhost:${PORT}`);
+    // Tạo server HTTP từ express app
+    const server = http.createServer(app);
+
+    // Tạo socket.io server, gắn vào server HTTP
+    const io = new Server(server, {
+      cors: {
+        origin: "http://localhost:5137", // frontend URL
+        methods: ["GET", "POST"],
+      },
+    });
+    io.use(socketAuthMiddleware);
+    // Gắn socket handlers
+    matchmakingSocket(io);
+
+    // Lắng nghe
+    server.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
     });
   } catch (err: any) {
     console.error("❌ PostgreSQL connection error:", err.message);

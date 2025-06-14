@@ -18,16 +18,8 @@ export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
 
 export const MatchStatus = {
   waiting: 'waiting',
-  matched: 'matched'
+  matched: 'matched',
+  timeout: 'timeout'
 } as const
 
 export type MatchStatus = (typeof MatchStatus)[keyof typeof MatchStatus]
-
-
-export const GameStatus = {
-  ongoing: 'ongoing',
-  finished: 'finished',
-  draw: 'draw'
-} as const
-
-export type GameStatus = (typeof GameStatus)[keyof typeof GameStatus]
