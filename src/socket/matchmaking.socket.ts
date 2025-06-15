@@ -14,7 +14,9 @@ import {
   SeverToClientEvents,
   MatchData,
 } from "../types/express";
+import { checkGameResult } from "../services/game.service";
 import redis from "../lib/redis";
+import { match } from "node:assert";
 
 const userSocketMap = new Map<
   number,
@@ -38,7 +40,25 @@ export function matchmakingSocket(io: Server) {
       if (opponentId) {
         const match = await createMatch(userId, opponentId);
         const opponentSocketId = await redis.get(`socket:${opponentId}`);
+        // lưu trạng thái match cho cả hai người chơi
+        await redis.set(
+          `user:${userId}:matchState`,
+          JSON.stringify({
+            matchId: match.id,
+            symbol: userId === match.playerXId ? "X" : "O",
+            opponentId: opponentId,
+          })
+        );
 
+        await redis.set(
+          `user:${opponentId}:matchState`,
+          JSON.stringify({
+            matchId: match.id,
+            symbol: opponentId === match.playerXId ? "X" : "O",
+            opponentId: userId,
+          })
+        );
+        // xóa ra khỏi một queue báo hiệu 2 người này đã match
         await removeUserFromQueue(userId);
         await removeUserFromQueue(opponentId);
 
@@ -65,7 +85,57 @@ export function matchmakingSocket(io: Server) {
         }, 5000);
       }
     });
-    socket.on("makeMove", async ({ matchId, index, symbol }) => {});
+
+    socket.on("makeMove", async ({ matchId, index, symbol }) => {
+      //xác thực
+      const userId = socket.data.user.id;
+      console.log(
+        `🎮 User ${userId} attempting move in match ${matchId} at index ${index} with symbol ${symbol}`
+      );
+      const matchStateStr = await redis.get(`user:${userId}:matchState`);
+      if (!matchStateStr) {
+        socket.emit("error", "Không tìm thấy trạng thái trận đấu");
+        return;
+      }
+      const matchState = JSON.parse(matchStateStr) as {
+        matchId: number;
+        symbol: "X" | "O";
+        opponentId: number;
+      };
+      if (matchState.matchId !== matchId) {
+        socket.emit("error", "Bạn không thuộc trận này");
+        return;
+      }
+
+      if (matchState.symbol !== symbol) {
+        socket.emit("error", "Không đúng lượt của bạn");
+        return;
+      }
+      try {
+        const { isWin, isDraw, updatedGame, nextTurn } = await checkGameResult(
+          game,
+          index,
+          symbol,
+          userId
+        );
+        const opponentSocketId = await redis.get(
+          `socket:${matchState.opponentId}`
+        ); // Lấy socket ID của đối thủ
+
+        const payload = { index, symbol };
+        socket.emit("moveMake", payload);
+        if (opponentSocketId) {
+          io.to(opponentSocketId).emit("move", payload);
+        }
+        if (isWin || isDraw) {
+          await redis.del(`user:${userId}:matchState`);
+          await redis.del(`user:${matchState.opponentId}:matchState`);
+        }
+      } catch (err: any) {
+        socket.emit("error", err.message);
+      }
+    });
+
     socket.on("disconnect", async () => {
       console.log(`❌ Disconnected: ${socket.id}`);
 
