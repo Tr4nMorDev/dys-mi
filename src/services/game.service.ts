@@ -2,33 +2,31 @@ import redis from "../lib/redis";
 import { PrismaClient } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 import { checkWinner } from "../utils/gameLogic";
-
-export async function makeMove(
-  gameId: number,
+import { Game } from "../generated/prisma/client";
+export function checkGameResultFromBoard(
+  board: ("X" | "O" | null)[],
   index: number,
-  playerId: number
+  symbol: "X" | "O",
+  userId: number,
+  playerXId: number,
+  playerOId: number
 ) {
-  const game = await prisma.game.findUnique({ where: { id: gameId } });
-
-  // Update boardState và kiểm tra kết quả
-  const board = game.boardState; // array 2D
-  board[row][col] = playerId === game.xPlayerId ? "X" : "O";
-
-  const winner = checkWinner(board);
-
-  if (winner) {
-    await prisma.game.update({
-      where: { id: gameId },
-      data: {
-        boardState: board,
-        finishedAt: new Date(),
-        winnerId: winner === "X" ? game.xPlayerId : game.oPlayerId,
-      },
-    });
-  } else {
-    await prisma.game.update({
-      where: { id: gameId },
-      data: { boardState: board },
-    });
+  if (board[index]) {
+    throw new Error("Ô đã được đánh");
   }
+
+  board[index] = symbol;
+
+  const isWin = checkWinner(board, index, symbol);
+  const isDraw = !board.includes(null);
+  const nextTurn = symbol === "X" ? "O" : "X";
+  const winnerId = isWin ? userId : null;
+
+  return {
+    isWin,
+    isDraw,
+    nextTurn,
+    board,
+    winnerId,
+  };
 }
