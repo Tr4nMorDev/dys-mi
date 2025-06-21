@@ -3,14 +3,14 @@ import { PrismaClient } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 import { checkWinner } from "../utils/gameLogic";
 import { Game } from "../generated/prisma/client";
-
-export async function checkGameResult(
-  game: Game,
+export function checkGameResultFromBoard(
+  board: ("X" | "O" | null)[],
   index: number,
   symbol: "X" | "O",
-  userId: number
+  userId: number,
+  playerXId: number,
+  playerOId: number
 ) {
-  const board = game.boardState as ("X" | "O" | null)[];
   if (board[index]) {
     throw new Error("Ô đã được đánh");
   }
@@ -20,29 +20,13 @@ export async function checkGameResult(
   const isWin = checkWinner(board, index, symbol);
   const isDraw = !board.includes(null);
   const nextTurn = symbol === "X" ? "O" : "X";
-
-  const updatedGame = await prisma.game.update({
-    where: { id: game.id },
-    data: {
-      boardState: board,
-      winnerId: isWin ? userId : undefined,
-      finishedAt: isWin || isDraw ? new Date() : undefined,
-    },
-  });
+  const winnerId = isWin ? userId : null;
 
   return {
-    board,
     isWin,
     isDraw,
     nextTurn,
-    updatedGame,
+    board,
+    winnerId,
   };
 }
-export async function getGame(gameId: number): Promise<Game | null> {
-  return await prisma.game.findUnique({ where: { id: gameId } });
-}
-export async function processMove(
-  userId: number,
-  matchId: number,
-  index: number
-) {}
