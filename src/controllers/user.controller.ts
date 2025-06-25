@@ -19,7 +19,7 @@ export const registerUser = async (
   res: Response
 ): Promise<void> => {
   const { name, email, password } = req.body as RegisterRequestBody;
-
+  console.log(name , email , password)
   const provider = AuthProvider.EMAIL;
 
   if (!name || !email || !password) {
@@ -50,7 +50,7 @@ export const registerUser = async (
     });
 
     // ✅ Tăng metric mỗi khi có user mới
-    registeredUsers.inc();
+    // registeredUsers.inc();
 
     res.status(201).json({
       token,

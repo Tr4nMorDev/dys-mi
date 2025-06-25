@@ -13,7 +13,7 @@ enum AuthProvider {
   GOOGLE
   GITHUB
 }
-
+  
 model User {
   id       Int      @id @default(autoincrement())
   name     String
@@ -67,3 +67,4 @@ model Game {
 }
 
 //npx prisma migrate dev --name reset-db-add-game
+//npx prisma generate 

@@ -1,4 +1,4 @@
-import redis from "../lib/redis";
+import redis from "../config/redis";
 import { NextFunction, Request, Response } from "express";
 
 export const cacheUserMiddleware = async (

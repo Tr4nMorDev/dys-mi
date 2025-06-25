@@ -8,7 +8,7 @@ import matchmakingController from "../controllers/matchmaking.controller";
 import { rateLimitMiddleware } from "../middlewares/rateLimit.middleware";
 import { metrics } from "../metrics";
 
-import redis from "../lib/redis";
+import redis from "../config/redis";
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.get("/redis-test", async (req, res) => {
   res.json({ val });
 });
 
-router.post("/auth/signup", rateLimitMiddleware, registerUser);
+router.post("/auth/signup", registerUser);
 router.post("/auth/google", verifyGoogleToken, authController.googleLogin);
 router.post("/auth/login", authController.login);
 router.post("/auth/logout", verifyJwtToken, authController.logout);

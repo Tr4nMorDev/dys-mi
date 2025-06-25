@@ -20,7 +20,6 @@ export const connectRedis = async () => {
     try {
       await redis.connect();
       isConnected = true;
-      console.log("✅ Redis connected");
     } catch (err) {
       console.error("❌ Redis connection failed", err);
     }

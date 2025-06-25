@@ -3,7 +3,12 @@ import jwt from "jsonwebtoken";
 import { PrismaClient, User } from "../generated/prisma/client";
 import { AuthProvider } from "../enums/auth-provider.enum";
 import UserModel from "../models/user.model";
+import dotenv from "dotenv";
 
+dotenv.config(); // đảm bảo biến môi trường được load từ .env
+
+const imagedefault = process.env.SERVER || "http://localhost:3000/1.png";
+console.log(imagedefault);
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const prisma = new PrismaClient();
 
@@ -20,7 +25,7 @@ export const registerUser = async ({
   name,
   email,
   password,
-  avatar = "default.png",
+  avatar = imagedefault,
   provider = AuthProvider.EMAIL,
 }: RegisterInput): Promise<User> => {
   // Kiểm tra xem email đã tồn tại chưa

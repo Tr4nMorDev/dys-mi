@@ -1,4 +1,4 @@
-import redis from "../lib/redis";
+import redis from "../config/redis";
 import { PrismaClient } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 import { checkWinner } from "../utils/gameLogic";

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import redis from "../lib/redis";
+import redis from "../config/redis";
 // const redis = new Redis(); // cấu hình Redis mặc định localhost:6379
 
 const RATE_LIMIT_WINDOW = 60; // 60 giây

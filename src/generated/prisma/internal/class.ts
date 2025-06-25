@@ -22,7 +22,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/home/mortal_user/backend-caro-game/src/generated/prisma",
+      "value": "/home/mortal/caro-socket/backend/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -36,7 +36,7 @@ const config: runtime.GetPrismaClientConfig = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/mortal_user/backend-caro-game/prisma/schema.prisma",
+    "sourceFilePath": "/home/mortal/caro-socket/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
@@ -46,6 +46,7 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -54,8 +55,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"POSTGRES_URL\")\n}\n\nenum AuthProvider {\n  EMAIL\n  GOOGLE\n  GITHUB\n}\n\nmodel User {\n  id       Int          @id @default(autoincrement())\n  name     String\n  email    String       @unique\n  password String?\n  avatar   String?      @default(\"1.png\")\n  provider AuthProvider @default(EMAIL)\n\n  // Quan hệ với Match\n  matches1 Match[] @relation(\"Player1\") // là người tạo hoặc người đầu tiên\n  matches2 Match[] @relation(\"Player2\") // là người được ghép\n\n  // Quan hệ với Game (X hoặc O)\n  gamesAsX Game[] @relation(\"XPlayer\")\n  gamesAsO Game[] @relation(\"OPlayer\")\n}\n\nenum MatchStatus {\n  waiting\n  matched\n  timeout\n}\n\nmodel Match {\n  id        Int       @id @default(autoincrement())\n  player1Id Int\n  player2Id Int?\n  matchedAt DateTime? // chỉ set khi đã match\n  createdAt DateTime  @default(now()) // dùng để tính thời gian chờ\n\n  status MatchStatus @default(waiting) // waiting | matched\n\n  player1 User  @relation(\"Player1\", fields: [player1Id], references: [id])\n  player2 User? @relation(\"Player2\", fields: [player2Id], references: [id])\n\n  game Game?\n}\n\nmodel Game {\n  id         Int       @id @default(autoincrement())\n  matchId    Int       @unique\n  xPlayerId  Int\n  oPlayerId  Int\n  boardState Json\n  winnerId   Int? // chỉ lưu ID, không cần object winner\n  createdAt  DateTime  @default(now())\n  finishedAt DateTime?\n\n  match   Match @relation(fields: [matchId], references: [id])\n  xPlayer User  @relation(\"XPlayer\", fields: [xPlayerId], references: [id])\n  oPlayer User  @relation(\"OPlayer\", fields: [oPlayerId], references: [id])\n}\n\n//npx prisma migrate dev --name reset-db-add-game\n",
-  "inlineSchemaHash": "e3241566e16a904a585bd542235de2a23c07fdb7f01064998a7007f713b358fe",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"POSTGRES_URL\")\n}\n\nenum AuthProvider {\n  EMAIL\n  GOOGLE\n  GITHUB\n}\n\nmodel User {\n  id       Int          @id @default(autoincrement())\n  name     String\n  email    String       @unique\n  password String?\n  avatar   String?      @default(\"1.png\")\n  provider AuthProvider @default(EMAIL)\n\n  // Quan hệ với Match\n  matches1 Match[] @relation(\"Player1\") // là người tạo hoặc người đầu tiên\n  matches2 Match[] @relation(\"Player2\") // là người được ghép\n\n  // Quan hệ với Game (X hoặc O)\n  gamesAsX Game[] @relation(\"XPlayer\")\n  gamesAsO Game[] @relation(\"OPlayer\")\n}\n\nenum MatchStatus {\n  waiting\n  matched\n  timeout\n}\n\nmodel Match {\n  id        Int       @id @default(autoincrement())\n  player1Id Int\n  player2Id Int?\n  matchedAt DateTime? // chỉ set khi đã match\n  createdAt DateTime  @default(now()) // dùng để tính thời gian chờ\n\n  status MatchStatus @default(waiting) // waiting | matched\n\n  player1 User  @relation(\"Player1\", fields: [player1Id], references: [id])\n  player2 User? @relation(\"Player2\", fields: [player2Id], references: [id])\n\n  game Game?\n}\n\nmodel Game {\n  id         Int       @id @default(autoincrement())\n  matchId    Int       @unique\n  xPlayerId  Int\n  oPlayerId  Int\n  boardState Json\n  winnerId   Int? // chỉ lưu ID, không cần object winner\n  createdAt  DateTime  @default(now())\n  finishedAt DateTime?\n\n  match   Match @relation(fields: [matchId], references: [id])\n  xPlayer User  @relation(\"XPlayer\", fields: [xPlayerId], references: [id])\n  oPlayer User  @relation(\"OPlayer\", fields: [oPlayerId], references: [id])\n}\n\n//npx prisma migrate dev --name reset-db-add-game\n//npx prisma generate\n",
+  "inlineSchemaHash": "e5e5f7c5294ab715b6ffe98b3734d54837ddcada0bbae3e9880dc45afc145271",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},

@@ -17,11 +17,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  # docker-compose.yml
-  # redis:
-  #   image: redis:alpine
-  #   ports:
-  #     - "6379:6379"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   # app:
   #   container_name: node-app
   #   build:
