@@ -27,6 +27,7 @@ export const verifyUnified = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  console.log("Vao very")
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -47,6 +48,7 @@ export const verifyUnified = async (
 
   // 2. Google Token
   try {
+    console.log("Test kết quả google ")
     const ticket = await googleClient.verifyIdToken({
       idToken: token,
       audience: GOOGLE_CLIENT_ID,
@@ -70,7 +72,7 @@ export const verifyUnified = async (
       };
       return next();
     }
-  } catch {}
+  } catch{}
 
   // 3. GitHub Token
   //   try {

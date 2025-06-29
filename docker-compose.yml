@@ -3,17 +3,17 @@ version: "3.9"
 services:
   postgres:
     container_name: postgres-db
-    image: postgres:13
+    image: postgres:13-alpine
     ports:
       - "5437:5432"
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB:   ${POSTGRES_DB}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,6 +21,20 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+  
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
   # app:
   #   container_name: node-app
   #   build:
@@ -30,13 +44,17 @@ services:
   #     - "3000:3000"
   #   environment:
   #     - POSTGRES_URL=${POSTGRES_URL}
-  #     - REDIS_URL=${REDIS_URL} # 👉 THÊM DÒNG NÀY
+  #     - REDIS_URL=${REDIS_URL} 
   #     - PORT=${PORT}
   #     - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
   #     - JWT_SECRET=${JWT_SECRET}
+  #     - VITE={VITE}
+  #     - SERVER={SERVER}
   #   depends_on:
-  #     - postgres
-  #     - redis
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
   #   # command: node dist/server.js # Chạy file build JS từ TypeScript
   #   volumes:
   #     - /app/node_modules # Giữ node_modules trong container để không bị ghi đè
@@ -66,4 +84,5 @@ services:
 
 volumes:
   postgres-data:
+  ollama-data:
   # grafana-data:

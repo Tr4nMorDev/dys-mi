@@ -5,10 +5,12 @@ import authController from "../controllers/auth.controller";
 import { verifyJwtToken } from "../middlewares/auth.middleware";
 import { verifyUnified } from "../middlewares/verifyUnified";
 import matchmakingController from "../controllers/matchmaking.controller";
+import matchAIController from "../controllers/matchAI.controller";
 import { rateLimitMiddleware } from "../middlewares/rateLimit.middleware";
 import { metrics } from "../metrics";
 
 import redis from "../config/redis";
+import { match } from "node:assert";
 
 const router = express.Router();
 
@@ -47,4 +49,7 @@ router.get("/metrics", async (req: Request, res: Response) => {
   res.send(await metrics.metrics());
 });
 
+router.patch("/api/play-with-ai",verifyUnified,matchAIController.matchAI);
+router.put("/api/play-with-ai/move" , verifyUnified  )
+router.patch("/api/play-with-ai/exit" , verifyUnified , matchAIController.outmatchAI)
 export default router;

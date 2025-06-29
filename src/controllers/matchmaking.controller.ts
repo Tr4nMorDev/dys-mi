@@ -10,13 +10,6 @@ const prisma = new PrismaClient();
 const MATCH_QUEUE_KEY = "matchmaking_queue";
 
 export const startmatching: RequestHandler = async (req, res) => {
-  const user = (req as AuthenticatedRequest).user;
-  const id = user?.id;
-  if (!id) {
-    return res.status(401).json({ message: "Not find id" });
-  }
-  console.log("id : ", id);
-
   // await enqueueUser(id);
   return res.status(200).json({
     message: "Waiting for opponent...",
@@ -24,22 +17,14 @@ export const startmatching: RequestHandler = async (req, res) => {
   });
 };
 export const cancelmatching: RequestHandler = async (req, res) => {
-  const user = (req as AuthenticatedRequest).user;
-  const id = user?.id;
-  if (!id) {
-    return res.status(401).json({ message: "Not find id" });
-  }
+  const { id } = (req as AuthenticatedRequest).user;
   removeUserFromQueue(id);
   return res.status(200).json({
     message: "Hủy tìm trận ...",
   });
 };
 export const exitmatch: RequestHandler = async (req, res) => {
-  const user = (req as AuthenticatedRequest).user;
-  const id = user?.id;
-  if (!id) {
-    return res.status(401).json({ message: "Not find id" });
-  }
+  const { id } = (req as AuthenticatedRequest).user;
   return res.status(200).json({
     message: "Exit trận ",
   });

@@ -9,36 +9,7 @@ import {
 } from "../services/matchmaking.service";
 import { checkGameResultFromBoard } from "../services/game.service";
 import redis from "../config/redis";
-
-// Hàm xử lý timeout tự động sau 30s không đi
-async function scheduleTimeout(matchId: number, io: Server) {
-  setTimeout(async () => {
-    const matchStateStr = await redis.get(`match:${matchId}:state`);
-    if (!matchStateStr) return;
-
-    const state = JSON.parse(matchStateStr);
-    if (Date.now() <= state.turnDeadline) return;
-
-    const loserId = state.turn === "X" ? state.playerXId : state.playerOId;
-    const winnerId = state.turn === "X" ? state.playerOId : state.playerXId;
-
-    const loserSocketId = await redis.get(`socket:${loserId}`);
-    const winnerSocketId = await redis.get(`socket:${winnerId}`);
-
-    const payload = {
-      winnerId,
-      isDraw: false,
-      reason: "timeout",
-    };
-
-    if (loserSocketId) io.to(loserSocketId).emit("gameEnd", payload);
-    if (winnerSocketId) io.to(winnerSocketId).emit("gameEnd", payload);
-
-    await redis.del(`match:${matchId}:state`);
-    await redis.del(`user:${loserId}:matchId`);
-    await redis.del(`user:${winnerId}:matchId`);
-  }, 30_000);
-}
+import { scheduleTimeout } from "../utils/gameLogic";
 
 export function listAllConnectedSockets(io: Server) {
   const socketsMap = io.sockets.sockets; // Map<socketId, Socket>

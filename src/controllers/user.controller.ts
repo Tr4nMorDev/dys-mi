@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import userService from "../services/user.service";
-import { AuthProvider } from "../enums/auth-provider.enum";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { registeredUsers } from "../metrics"; // import metric
-
+import { AuthProvider } from "../enums/auth-provider.enum";
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 

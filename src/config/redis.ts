@@ -26,4 +26,21 @@ export const connectRedis = async () => {
   }
 };
 
+export async function logTotalRedisKeys() {
+  try {
+    const total = await redis.dbSize(); // 👈 Lấy số lượng keys
+    console.log(`📦 Tổng số Redis keys hiện tại: ${total}`);
+  } catch (err) {
+    console.error("❌ Lỗi khi đếm Redis keys:", err);
+  }
+}
+export async function listAllRedisKeys() {
+  try {
+    const keys = await redis.keys("*");
+    console.log(`📦 Có ${keys.length} keys:`);
+    keys.forEach((key) => console.log(" -", key));
+  } catch (err) {
+    console.error("❌ Không thể liệt kê Redis keys:", err);
+  }
+}
 export default redis;

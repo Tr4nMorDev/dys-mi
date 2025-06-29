@@ -8,7 +8,7 @@ const corsOptions: CorsOptions = {
     "https://portfolio-murex-omega-46.vercel.app",
   ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS" , "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 

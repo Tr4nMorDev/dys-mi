@@ -3,21 +3,14 @@ import userService from "../services/user.service";
 import authService from "../services/auth.service";
 import jwt from "jsonwebtoken";
 import { AuthProvider } from "../enums/auth-provider.enum";
-
+import { GoogleRequest } from "../types/express";
 // Định nghĩa interface cho request nếu có thêm custom field
-interface GoogleRequest extends Request {
-  googleUser: {
-    email: string;
-    name: string;
-    picture?: string;
-    provider: AuthProvider;
-  };
-  user?: { id: number }; // Cho logout
-}
+
 
 const googleLogin = async (req: Request, res: Response) => {
   const { googleUser } = req as GoogleRequest;
   const { email, name, picture } = googleUser;
+
 
   try {
     const user = await userService.findOrCreateGoogleUser({
